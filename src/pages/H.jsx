@@ -1,0 +1,268 @@
+import React, { useEffect, useState, useRef } from 'react';
+import { BASE_URL } from '../Services/baseURL';
+import { Table, Button, Container, Form } from 'react-bootstrap';
+import Image from 'react-bootstrap/Image';
+import Modal from 'react-bootstrap/Modal';
+import { FaPlay, FaPause, FaStepBackward, FaStepForward, FaVolumeUp } from 'react-icons/fa';
+import { getmalayalamAPI } from '../Services/allAPI';
+import { Row, Col, } from "react-bootstrap";
+import { TiHeartOutline } from "react-icons/ti";
+import { GoDownload } from "react-icons/go";
+import { PiDotsThreeThin } from "react-icons/pi";
+import { BsThreeDotsVertical } from "react-icons/bs";
+
+import { gethindiAPI } from '../Services/allAPI';
+
+function H() {
+
+  const [show, setShow] = useState(false);
+  const [currentSong, setCurrentSong] = useState(null);
+  const [allMusic, setAllMusic] = useState([]);
+  const [filteredMusic, setFilteredMusic] = useState([]);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(50);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const audioRef = useRef(null);
+
+  const handleClose = () => {
+    setShow(false);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    setIsPlaying(false);
+  };
+
+  const handleShow = (song) => {
+    setCurrentSong(song);
+    setShow(true);
+  };
+
+  const getAllMusic = async () => {
+    if (sessionStorage.getItem('token')) {
+      const token = sessionStorage.getItem('token');
+      const reqHeader = {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${token}`,
+      };
+      const result = await gethindiAPI(reqHeader);
+      setAllMusic(result.data);
+      setFilteredMusic(result.data); // Initially set all music
+    }
+  };
+
+  // Filter music based on search query
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    if (query.trim() === '') {
+      setFilteredMusic(allMusic); // If search is empty, show all music
+    } else {
+      const filtered = allMusic.filter(item =>
+        item.songname.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredMusic(filtered);
+    }
+  };
+
+  useEffect(() => {
+    getAllMusic();
+  }, []);
+
+  useEffect(() => {
+    if (show && currentSong) {
+      const audio = audioRef.current;
+      audio.src = `${BASE_URL}/uploads/${currentSong.audio}`;
+      audio.load();
+      audio.play();
+      setIsPlaying(true);
+
+      audio.ontimeupdate = () => setCurrentTime(audio.currentTime);
+      audio.onloadedmetadata = () => setDuration(audio.duration);
+    }
+  }, [show, currentSong]);
+
+  const togglePlayPause = () => {
+    const audio = audioRef.current;
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const handleVolumeChange = (e) => {
+    setVolume(e.target.value);
+    if (audioRef.current) {
+      audioRef.current.volume = e.target.value / 100;
+    }
+  };
+
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+  };
+
+  return (
+    <div style={{ backgroundColor: "#1a0006", color: "#fff", minHeight: "100vh" }}>
+      <Container fluid className="py-5" style={{ background: "linear-gradient(to bottom, #330000, #1a0006)" }}>
+        <Row className="align-items-center">
+          <Col md={6} className="text-center text-md-start px-4">
+            {/* Swetha Mohan Title */}
+            <h1 style={{ fontSize: "3rem", fontWeight: "bold", marginBottom: "20px" }}>
+              Swetha Mohan
+            </h1>
+            {/* Updated Description */}
+            <p style={{ fontSize: "1.2rem", lineHeight: "1.6" }}>
+              Explore the soulful voice of Swetha Mohan. Discover her melodies that captivate the heart.
+            </p>
+            {/* Monthly Listeners */}
+            <p style={{ margin: 0, fontSize: "1rem" }}>4,321,987 monthly listeners</p>
+            <div className="d-flex align-items-center gap-3 mt-4">
+              {/* Follow Her Button */}
+              <Button variant="warning" size="lg">
+                Follow Her
+              </Button>
+
+              {/* Search Box */}
+              <Form.Control
+                type="text"
+                placeholder="Search songs..."
+                value={searchQuery}
+                onChange={handleSearch}
+                style={{ borderRadius: "20px", backgroundColor: "#330000", color: "#fff", padding: "10px 15px", maxWidth: "130px", }} />
+              <style>
+                {`
+      input::placeholder {
+        color: #fff !important;
+      }
+    `}
+              </style>
+
+              <h1>
+                <PiDotsThreeThin />
+              </h1>
+            </div>
+
+          </Col>
+          <Col md={2} className="text-center">
+            {/* Updated Swetha Mohan Image */}
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUdDKLyMkT2hAXs-U8m94N5JVDUWFt30I2kA&s"
+              alt="Swetha Mohan"
+              style={{ borderRadius: "20px", maxWidth: "500%", height: "auto", boxShadow: "0 10px 30px rgba(0, 0, 0, 0.5)" }} />
+          </Col>
+        </Row>
+      </Container>
+
+
+      {/* Songs Section */}
+      <Container >
+        <h2 className=" mb-4" style={{ fontWeight: "bold" }}>
+          popular
+        </h2>
+        <Table responsive className="table-modern text-center table table-borderless table-striped table-hover">
+
+          <tbody>
+            {filteredMusic.length > 0 ? (
+              filteredMusic.map((song, index) => (
+                <tr key={index}>
+                  <td style={{ backgroundColor: '#1a0006', color: '#fff' }}>{index + 1}</td>
+                  <td style={{ backgroundColor: '#1a0006', color: '#fff' }}>
+                    <img
+                      src={`${BASE_URL}/uploads/${song.songimage}`}
+                      alt="Song"
+                      style={{ borderRadius: "10px", width: "50px", height: "50px", objectFit: "cover", }} />
+                  </td>
+                  <td style={{ backgroundColor: '#1a0006', color: '#fff' }}>{song.songname}</td>
+                  <td style={{ backgroundColor: '#1a0006', color: '#fff' }}>
+                    <audio controls src={`${BASE_URL}/uploads/${song.audio}`} />
+                  </td>
+                  <td style={{ backgroundColor: '#1a0006', color: '#fff' }}>
+                    <TiHeartOutline className="ms-3" />
+                    <GoDownload className="ms-3" />
+                    <BsThreeDotsVertical className="ms-3" />
+
+
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center">
+                  No songs found
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </Table>
+
+      </Container>
+
+
+
+      {/* Modal for Music Player */}
+      <Modal show={show} onHide={handleClose} centered size="lg">
+        <Modal.Body style={{ backgroundColor: '#101010', color: '#fff' }}>
+          {currentSong ? (
+            <>
+              <div className="text-center mb-4">
+                <img
+                  src={`${BASE_URL}/uploads/${currentSong.songimage}`}
+                  alt={currentSong.songname}
+                  style={{ width: '200px', height: '200px', borderRadius: '15px', objectFit: 'cover', boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)', }} />
+              </div>
+              <div className="text-center mb-3">
+                <h5>{currentSong.songname}</h5>
+                <p>{formatTime(currentTime)} / {formatTime(duration)}</p>
+                <input
+                  type="range"
+                  value={currentTime}
+                  max={duration}
+                  onChange={(e) => {
+                    audioRef.current.currentTime = e.target.value;
+                    setCurrentTime(e.target.value);
+                  }}
+                  style={{
+                    width: '100%',
+                    backgroundColor: '#555',
+                    cursor: 'pointer',
+                  }}
+                />
+              </div>
+              <div className="d-flex justify-content-center align-items-center">
+                <FaStepBackward size={30} className="mx-2 text-white" />
+                {isPlaying ? (
+                  <FaPause size={30} onClick={togglePlayPause} className="mx-2 text-white" />
+                ) : (
+                  <FaPlay size={30} onClick={togglePlayPause} className="mx-2 text-success" />
+                )}
+                <FaStepForward size={30} className="mx-2 text-white" />
+              </div>
+              <div className="mt-4">
+                <FaVolumeUp className="text-white" />
+                <input
+                  type="range"
+                  value={volume}
+                  onChange={handleVolumeChange}
+                  min="0"
+                  max="100"
+                  className="mx-2"
+                  style={{ width: '50%' }}
+                />
+              </div>
+              <audio ref={audioRef}></audio>
+            </>
+          ) : (
+            <p className="text-center">Loading...</p>
+          )}
+        </Modal.Body>
+      </Modal>
+    </div>
+  );
+}
+
+export default H;
