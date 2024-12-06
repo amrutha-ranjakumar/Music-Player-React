@@ -8,7 +8,7 @@ import { FaHeart } from "react-icons/fa";
 function Header() {
 
   return (
-    <Navbar style={{ borderBottom: "2px solid  #ffffff", padding: "15px 0", position: "sticky", top: 0, zIndex: 1000, backgroundColor: '	#1a0006' }}>
+    <Navbar style={{ borderBottom: "2px solid  #ffffff", padding: "15px 0", position: "sticky", top: 0, backgroundColor: '	#1a0006' }}>
       <Container className="ms-4" >
         {/* Left Section: Brand Name */}
         <Navbar.Brand href="/" style={{ fontSize: "2rem", fontWeight: "bold", color: "#b30000", letterSpacing: "1.5px", }}>

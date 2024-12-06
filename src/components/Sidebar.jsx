@@ -33,12 +33,12 @@ function Sidebar() {
   return (
     <div>
       {/* Navbar */}
-      <Navbar expand="lg" fixed="top">
+      <Navbar  fixed="top">
         <Container fluid>
           <Button variant="dark"
-            className="d-md-none"
+       
             onClick={toggleSidebar}
-            style={{ position: 'absolute', top: '50px', left: '2px', zIndex: 999, }}>
+           >
             ☰
           </Button>
         </Container>

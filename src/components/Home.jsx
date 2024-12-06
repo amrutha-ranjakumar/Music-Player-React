@@ -210,7 +210,7 @@ function Home() {
                 <thead></thead>
                 <tbody style={{ color: "#fff" }}>
                   {allsongs.length ? (
-                    allsongs.slice(0, 6).map((item, index) => (
+                    allsongs.slice(0, 5).map((item, index) => (
                       <tr
                         key={index}
                         className="text-center song-row"
@@ -265,7 +265,7 @@ function Home() {
                 <thead></thead>
                 <tbody style={{ color: "#fff" }}>
                   {allsongs.length > 6 ? (
-                    allsongs.slice(6, 12).map((item, index) => (
+                    allsongs.slice(5, 12).map((item, index) => (
                       <tr
                         key={index}
                         className="text-center song-row"
