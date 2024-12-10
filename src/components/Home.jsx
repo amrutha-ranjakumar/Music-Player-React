@@ -127,7 +127,7 @@ function Home() {
                     animation: `slideUp ${0.5 + index * 0.2}s ease-in-out`,
                   }}
                 >
-                  <div style={{ position: "relative", backgroundColor: "#330000", borderRadius: "15px", overflow: "hidden", boxShadow: "0 6px 15px rgba(0, 0, 0, 0.5)", textAlign: "center", transition: "transform 0.3s ease", width: "100%", maxWidth: "250px", cursor: "pointer", }}
+                  <div style={{ position: "relative", backgroundColor: "#330000", borderRadius: "15px", boxShadow: "0 6px 15px rgba(0, 0, 0, 0.5)", textAlign: "center", transition: "transform 0.3s ease", width: "100%", maxWidth: "250px", cursor: "pointer", }}
                     onMouseEnter={() => handleMouseEnter(index)}
                     onMouseLeave={handleMouseLeave}
                     onTouchStart={() => handleTouchStart(index)}
@@ -137,7 +137,7 @@ function Home() {
                       src={`${BASE_URL}/uploads/${item.image}`}
                       fluid
                       alt={item.title}
-                      style={{ borderRadius: "15px 15px 0 0", height: "200px", width: "100%", objectFit: "cover", }} />
+                      style={{ borderRadius: "15px 15px 0 0", height: "200px", width: "100%", }} />
                     {/* Play Icon Overlay */}
                     <div style={{
                       position: "absolute", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 0, 0.6)", display: "flex", justifyContent: "center", alignItems: "center", opacity: hoveredCard === index ? 1 : 0, transition: "opacity 0.3s ease", borderRadius: "15px",
@@ -145,9 +145,9 @@ function Home() {
                     >
                       <img src={play}
                         alt="Play Icon"
-                        style={{ width: "50px", height: "50px", filter: "invert(1)", }} />
+                        style={{ width: "50px", height: "50px" }} />
                     </div>
-                    <div style={{ padding: "10px", backgroundColor: "#1a0006", color: "#f8f9fa", fontFamily: "'Poppins', sans-serif", }} >
+                    <div style={{ padding: "10px", backgroundColor: "#1a0006", color: "#f8f9fa"}} >
                       <h5 style={{ margin: "0", fontWeight: "500" }}>{item.title}</h5>
                       <h5 style={{ margin: "0", fontWeight: "500" }}>{item.title}</h5>
                     </div>

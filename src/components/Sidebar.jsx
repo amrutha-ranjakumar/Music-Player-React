@@ -67,7 +67,7 @@ function Sidebar() {
             <Nav.Link href="/paymentpage" onClick={handleClose}>
               <MdOutlinePayments size={18} /> Payment
             </Nav.Link>
-            <Nav.Link href="/dashboard" className="mb-3 text-white">
+            <Nav.Link href="/dashboard" onClick={handleClose}>
               <IoIosCreate size={18} /> Create Music
             </Nav.Link>
             <Nav.Link href="/favourite" onClick={handleClose}>
